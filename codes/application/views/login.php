@@ -18,8 +18,10 @@
     <script src="../assets/js/global/dashboard.js"></script>
     <link rel="stylesheet" href="../assets/css/custom/global.css">
     <link rel="stylesheet" href="../assets/css/custom/signup.css">
+    <script src="../assets/js/global/signup.js"></script>
+
 </head>
-<script>
+<!-- <script>
     $(document).ready(function() {
         $("input[name=email]").focus();
         $("form").submit(function(event) {
@@ -31,26 +33,34 @@
             window.location.href = "catalogue.html";
         });
     });
-</script>
+</script> -->
 <body>
+<?php if($this->session->flashdata('validation_errors')){ ?>
+        <div class="error-alert rounded shadow">
+            <span>There were errors with your submission</span>
+            <p><?= $this->session->flashdata('validation_errors'); ?><p>
+        </div>
+<?php } ?>
     <div class="wrapper">
-        <a href="/dashboard"><img src="../assets/images/organic_shop_logo_large.svg" alt="Organic Shop"></a>
-        <form action="../process/process.php" method="post" class="login_form">
+        <?= form_open('Users/login_user', 'class="login_form"') ?>
+            <img src="../assets/images/organic_shop_logo_large.svg" alt="Organic Shop">
             <h2>Login to order.</h2>
-            <a href="signup.html">New Member? Register here.</a>
+            <a href="/Users/register">New Member? Register here.</a>
             <ul>
                 <li>
-                    <input type="text" name="email">
+                    <input type="text" name="email" value="jdoe@gmail.com">
                     <label>Email</label>
+                    <span></span>
                 </li>
                 <li>
-                    <input type="password" name="password">
+                    <input type="password" name="password" value="123456789">
                     <label>Password</label>
+                    <span></span>
                 </li>
             </ul>
             <button type="submit" class="login_btn">Login</button>
             <input type="hidden" name="action" value="login">
-        </form>
+        <?= form_close(); ?>
     </div>
 </body>
 </html>

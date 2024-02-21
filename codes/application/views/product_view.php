@@ -44,15 +44,15 @@
                 <a href="/products">Go Back</a>
                 <ul>
                     <li>
-                        <?php foreach ($product_image as $image) { ?>
-                            <?php if ($image['is_main']) { ?>
+<?php foreach ($product_image as $image) { ?>
+<?php if ($image['is_main']) { ?>
                                 <img src="../assets/images/products/<?= $image['image_path']; ?>" alt="<?= $product_data['name']; ?>" class="default-image">
-                            <?php } ?>
-                        <?php } ?>
+<?php } ?>
+<?php } ?>
                         <ul>
-                            <?php foreach ($product_image as $image) { ?>
+<?php foreach ($product_image as $image) { ?>
                                 <li><button class="show_image"><img src="../assets/images/products/<?= $image['image_path']; ?>" alt="<?= $product_data['name']; ?>"></button></li>
-                            <?php } ?>
+<?php } ?>
                         </ul>
                     </li>
                     <li>
@@ -89,7 +89,7 @@
                 <section>
                     <h3>Similar Items</h3>
                     <ul id="similar-products-list">
-                        <?php foreach($similar_products as $similar_product) { ?>
+<?php foreach($similar_products as $similar_product) { ?>
                         <li>
                             <a href="product_view.html">
                                 <img src="../assets/images/products/<?= $similar_product['image_path']; ?>" alt="#">
@@ -105,7 +105,7 @@
                                 <span class="price">₱ <?= $similar_product['price']; ?></span>
                             </a>
                         </li>
-                        <?php } ?>
+<?php } ?>
                     </ul>
                 </section>
             </section>

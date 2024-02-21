@@ -283,6 +283,10 @@ body .wrapper > section > section > ul > li a h3 {
   color: #7D7D7D;
   font: 16px/20px roboto_medium, sans-serif;
   margin: 0px 0px 4px 0px;
+  width: 125px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 body .wrapper > section > section > ul > li a img {
   border-radius: 20px 20px 0px 0px;

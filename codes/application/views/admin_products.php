@@ -31,7 +31,7 @@
 <body>
     <div class="wrapper">
         <header>
-            <h1>Let’s provide fresh items for everyone.</h1>
+            <h1>Let's provide fresh items for everyone.</h1>
             <h2>Products</h2>
             <div>
                 <a class="switch" href="/products">Switch to Shop View</a>

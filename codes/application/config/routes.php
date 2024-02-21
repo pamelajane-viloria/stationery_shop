@@ -5,7 +5,9 @@ $route['translate_uri_dashes'] = FALSE;
 $route['default_controller'] = 'Products';
 // Products
 $route['products'] = 'Products';
-$route['products/5'] = 'Products/view_item';
+$route['products/(:num)'] = 'Products/view_item/$1';
+$route['products/filter'] = 'Products/filter_products';
+
 // Carts
 $route['cart'] = 'Carts';
 // Users

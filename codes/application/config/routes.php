@@ -2,7 +2,7 @@
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-$route['default_controller'] = 'Users/register';
+$route['default_controller'] = 'Dashboards/products';
 // Products
 $route['products'] = 'Products';
 $route['products/(:num)'] = 'Products/view_item/$1';

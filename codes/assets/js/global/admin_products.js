@@ -19,73 +19,81 @@ $(document).ready(function() {
         $(".image_input").trigger("click");
     });
 
-    /* To trigger image upload */
+    /* To trigger image upload and display preview */
     $("body").on("change", ".image_input", function() {
-        $('.form_data_action').val("upload_image");
-        $(".add_product_form").trigger("submit");
-    });
+        var files = $(this)[0].files;
+        var imageContainer = $(this).closest('li').find('ul');
+        var imageSettings = '<button type="button" class="delete_image image_settings"></button>';
+      
+        imageContainer.empty();
+        for (var i = 0; i < files.length; i++) {
+          var file = files[i];
+          var reader = new FileReader();
+          reader.onload = (function(file) {
+            return function(e) {
+              var imageElement = $('<img>');
+              imageElement.attr('src', e.target.result);
+              imageElement.addClass('uploaded_image');
+              var liElement = $('<li></li>');
+              liElement.append(imageElement);
+              liElement.append(imageSettings);
+      
+              // Include filename in checkbox value
+              var isMainInput = '<label for="main_image[]" class="image_settings"><input type="checkbox" name="main_image[]" value="' + file.name + '" data-filename="' + file.name + '">Mark as main</label>';
+              liElement.append(isMainInput);
+      
+              imageContainer.append(liElement);
+            };
+          })(file);
+          reader.readAsDataURL(file);
+        }
+      });
+      
+    
+    // Update other checkboxes when one is checked
+    $("body").on('change', 'input[name="main_image[]"]', function() {
+        if ($(this).is(':checked')) {
+            $(this).closest('ul').find('input[type="checkbox"]').not(this).prop('checked', false);
+        }
+    });    
 
     /* To delete an image */
     $("body").on("click", ".delete_image", function() {
-        $("input[name=image_index]").val($(this).attr("data-image-index"));
-        $('.form_data_action').val("remove_image");
-        $(".add_product_form").trigger("submit");
+        $(this).closest('li').remove();
     });
+
+    /* show is_main checkbox on hover */
+    $("body").on("mouseenter", "#image_preview li", function() {
+        $(this).find('.image_settings').show();
+    });
+    
+    $("body").on("mouseleave", "#image_preview li", function() {
+        $(this).find('.image_settings').hide();
+    });    
+
+    // $("body").on("submit", ".add_product_form", function() {
+    //     console.log("Add product form is submitted");
+    //     filterProducts($(this));
+    //     return false;
+    // }); 
 
     /*  */
-    $("body").on("change", "input[name=main_image]", function() {
-        $("input[name=image_index]").val($(this).val());
-        $(".form_data_action").val("mark_as_main");
-        $(".add_product_form").trigger("submit");
+    // $("body").on("change", "input[name=main_image]", function() {
+    //     $("input[name=image_index]").val($(this).val());
+    //     $(".form_data_action").val("mark_as_main");
+    // });
+
+    $("body").on("hidden.bs.modal", function() {
+        $("#add_product_modal").find("h2").text("Add a product");
+        $('#product_form')[0].reset();
     });
 
-    $("body").on("hidden.bs.modal", "#add_product_modal", function() {
-        $(".form_data_action").val("reset_form");
-        $(".add_product_form").trigger("submit");
-        $(".add_product_form").attr("data-modal-action", 0);
-        $(".form_data_action").find("textarea").addClass("jhaver");
 
-    });
 
-    $("body").on("submit", ".add_product_form", function() {
-        $.ajax({
-            url: $(this).attr("action"),
-            type: 'POST',
-            data: new FormData(this),
-            contentType: false,
-            cache: false,
-            processData:false,
-            success: function(res) {
-                let form_data_action = $('.form_data_action').val();
-                
-                if(form_data_action == "add_product" || form_data_action == "edit_product") {
-                    if(parseInt(res) == 0) {
-                        $(".product_content").html(res);
-                        resetAddProductForm();
-                        $("#add_product_modal").modal("hide");
-                    }
-                    else {
-                        $(".image_label").html("Upload Images (4 Max) <span>* Please add an image.</span>");
-                    };
-                }
-                else if(form_data_action == "upload_image" || form_data_action == "remove_image") {
-                    $(".image_preview_list").html(res);
-                }
-                else if(form_data_action == "reset_form") {
-                    resetAddProductForm();
-                };
-                ($(".add_product_form").attr("data-modal-action") == 0) ? $(".form_data_action").val("add_product") : $(".form_data_action").val("edit_product");
-                ($(".image_preview_list").children().length >= 4) ? $(".upload_image").addClass("hidden") : $(".upload_image").removeClass("hidden");
-            }
-        });
- 
-        return false;
-    }); 
-
-    $("body").on("submit", ".categories_form", function() {
-        filterProducts(form)
-        return false;
-    });
+    // $("body").on("submit", ".categories_form", function() {
+    //     filterProducts(form);
+    //     return false;
+    // });
 
     $("body").on("click", ".categories_form button", function() {
         let button = $(this);
@@ -101,36 +109,68 @@ $(document).ready(function() {
         return false;
     });
 
-    $("body").on("keyup", ".search_form", function() {
-        filterProducts($(this));
-        $(".categories_form").find(".active").removeClass("active");
-    });
+    // $("body").on("keyup", ".search_form", function() {
+    //     filterProducts($(this));
+    //     $(".categories_form").find(".active").removeClass("active");
+    // });
 
     $("body").on("submit", ".delete_product_form", function() {
         filterProducts($(this));
         $("body").removeClass("show_popover_overlay");
         $(".popover_overlay").fadeOut();
-        return false;
-    });
 
-    $("body").on("click", ".edit_product", function() {
-        $("input[name=edit_product_id]").val($(this).val());
-        $("#add_product_modal").modal("show");
-        $(".form_data_action").val("edit_product");
-        $(".add_product_form").attr("data-modal-action", 1);
-        $("#add_product_modal").find("h2").text("Edit product #" + $(this).val());
-    });
-
-    $("body").on("submit", ".get_edit_data_form", function() {
-        let form = $(this);
-        $.post(form.attr("action"), form.serialize(), function(res) {
-            $(".add_product_form").find(".form_control").html(res);
-            $('.selectpicker').selectpicker('refresh');
+        var form = $(this);
+        $.post(form.attr('action'), form.serialize(), function(data) {
+            $('#product-list').html(data);
         });
 
         return false;
     });
 
+    $("body").on("click", ".edit_product", function() {
+        var product_id = $(this).val();
+        $.get('/Dashboards/get_product_data/' + product_id, function(data) {
+            populateEditModal(data);
+        });        
+        $("#product_form").attr("action", "/Dashboards/edit_product/" + product_id);
+        $("#add_product_modal").modal("show");
+        $("#add_product_modal").find("h2").text("Edit product #" + $(this).val());
+    });
+
+    // $("body").on("submit", "#product_form", function() {
+    //     filterProducts($(this));
+    //     $("#add_product_modal").modal("hide");
+    // });
+
+    // Get products
+    $.get('/Dashboards/index_html', function(data) {
+        $('.products_table tbody').html(data);
+    });
+
+    // Search products
+    $('#search_input').on('input', function() {
+        let search_term = $(this).val().trim();
+        $.get('/Dashboards/search_by_name', { search: search_term }, function(data) {
+            $('.products_table tbody').html(data);
+        });
+    });
+
+    // Filter Products
+    $('#category-list button').on('click', async function(event) {
+        event.preventDefault();
+        const tokenResponse = await $.ajax({
+            url: '/Products/get_csrf_token',
+            dataType: 'json'
+        });
+        const categoryName = $(this).data('categoryName');
+        const csrfToken = tokenResponse.csrf_token;
+        $.post('/Dashboards/filter_products', { category_name: categoryName, csrf_token: csrfToken }, function(response) {
+            $('#product-list').html(response);
+            $('#product-count').text(response.product_count);
+        });
+        $(this).parent().parent().children().children().removeClass('active');
+        $(this).addClass('active');
+    });
 });
 
 function resetAddProductForm() {
@@ -145,6 +185,14 @@ function resetAddProductForm() {
 function filterProducts(form) {
     $.post(form.attr("action"), form.serialize(), function(res) {
         $(".product_content").html(res);
-        console.log(res);
+        // console.log(res);
     });
+}
+
+function populateEditModal(data) {
+    var productData = JSON.parse(data);
+    $("input[name=prouct_name]").val(productData.name);
+    $("textarea[name=description]").val(productData.description);
+    $("input[name=price]").val(productData.price);
+    $("input[name=inventory]").val(productData.inventory);
 }

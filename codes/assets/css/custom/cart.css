@@ -90,23 +90,27 @@ body .wrapper > section > section .cart_items_form > ul > li > span {
   padding: 7px 14px;
   vertical-align: top;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form {
   position: absolute;
   right: 0px;
   top: 0px;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul > li {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li {
   display: inline-block;
   margin-right: 30px;
   padding: 18px 0px;
   vertical-align: top;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul > li label {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li label {
   color: #7D7D7D;
   display: block;
   font: 11px/13px roboto_regular, sans-serif;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul > li input {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li form {
+  display: inline-block;
+  vertical-align: top;
+}
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li input {
   border-radius: 10px;
   border: 1px solid #D4E1EC;
   color: #A1A1A1;
@@ -117,7 +121,7 @@ body .wrapper > section > section .cart_items_form > ul > li > ul > li input {
   vertical-align: top;
   width: 110px;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul > li .remove_item {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li .remove_item {
   background-color: transparent;
   background-image: url("../../images/remove.svg");
   background-repeat: no-repeat;
@@ -126,13 +130,13 @@ body .wrapper > section > section .cart_items_form > ul > li > ul > li .remove_i
   height: 119px;
   width: 60px;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul > li .remove_item:hover {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li .remove_item:hover {
   background-position: -59px 0px;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul > li > ul {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li > ul {
   display: inline-block;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul > li > ul li button {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li > ul li button {
   background-color: #F6F6F6;
   background-image: url("../../images/left.svg");
   background-position: 50% 47%;
@@ -143,10 +147,10 @@ body .wrapper > section > section .cart_items_form > ul > li > ul > li > ul li b
   rotate: 90deg;
   width: 26px;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul > li > ul li:last-child button {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li > ul li:last-child button {
   rotate: 270deg;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul > li .total_amount {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li .total_amount {
   background-color: #F6F6F6;
   border-radius: 10px;
   color: #9C89FF;
@@ -158,7 +162,7 @@ body .wrapper > section > section .cart_items_form > ul > li > ul > li .total_am
   vertical-align: top;
   width: 110px;
 }
-body .wrapper > section > section .cart_items_form > ul > li > ul > li:last-child {
+body .wrapper > section > section .cart_items_form > ul > li > ul > form > li:last-child {
   margin-right: 0px;
   padding: 0px;
 }
@@ -197,6 +201,9 @@ body .wrapper > section > section .cart_items_form > ul > li.no_data {
   height: 213px;
   text-align: center;
   padding: 32px 0px;
+}
+body .wrapper > section > section .cart_items_form > ul > li.no_data p {
+  color: #7D7D7D;
 }
 body .wrapper > section > section .cart_items_form > ul > li.no_data a {
   width: 176px;

@@ -4,7 +4,8 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Products</title>
+        <title>Studio Stationery</title>
+        <link rel="shortcut icon" href="../assets/images/studio_stationery.ico" type="image/x-icon">
 
         <script src="../assets/js/vendor/jquery.min.js"></script>
         <script src="../assets/js/vendor/popper.min.js"></script>
@@ -25,7 +26,6 @@
 <?php } ?>
         <div class="wrapper">
             <header>
-                <h1>Let's provide fresh items for everyone.</h1>
                 <h2>Products</h2>
                 <div>
                     <a class="switch" href="/products">Switch to Shop View</a>
@@ -41,16 +41,13 @@
                 </div>
             </header>
             <aside>
-                <a href="#"><img src="../assets/images/organi_shop_logo_dark.svg" alt="Organic Shop"></a>
+                <a href="/Products"><img src="../assets/images/organi_shop_logo_dark.svg" alt="Organic Shop"></a>
                 <ul>
-                    <li><a href="/Dashboards/orders">Orders</a></li>
+                    <li><<a href="/Admin_orders/orders">Orders</a></li>
                     <li class="active"><a href="/Dashboards/products">Products</a></li>
                 </ul>
             </aside>
             <section>
-                <!-- <form action="process.php" method="post" class="search_form">
-                    <input type="text" name="search" id="search_input" placeholder="Search Products">
-                </form> -->
                 <?= form_open('Dashboards/index_html', array('id' => 'search_form', 'class' => 'search_form', 'method' => 'get')); ?>
                     <input type="text" name="search" id="search_input" placeholder="Search Products">
                 <?= form_close(); ?>
@@ -95,7 +92,6 @@
                     <div class="modal-content">
                         <button data-dismiss="modal" aria-label="Close" class="close_modal"></button>
                         <form id="product_form" class="add_product_form" method="POST" enctype="multipart/form-data" name="product_form" action="/Dashboards/add_product/">
-  
                             <h2>Add a Product</h2>
                             <ul>
                                 <li>
@@ -108,13 +104,11 @@
                                 </li>
                                 <li>
                                     <label>Category</label>
-                                    <select class="selectpicker">
-                                        <option>Vegetables</option>
-                                        <option>Fruits</option>
-                                        <option>Pork</option>
-                                        <option>Beef</option>
-                                        <option>Chicken</option>
-                                    </select>
+                                    <select class="selectpicker" name="category">
+<?php foreach ($category_values as $category_id => $category_name) { ?>
+                                        <option value="<?php echo $category_id; ?>"><?php echo $category_name; ?></option>
+<?php } ?>
+                                   </select>
                                 </li>
                                 <li>
                                     <input type="number" name="price" value="1" >

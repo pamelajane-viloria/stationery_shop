@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organic Shop: Let's order fresh items for you.</title>
+    <title>Studio Stationery</title>
 
-    <link rel="shortcut icon" href="../assets/images/organic_shop_favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/images/studio_stationery.ico" type="image/x-icon">
 
     <script src="../assets/js/vendor/jquery.min.js"></script>
     <script src="../assets/js/vendor/popper.min.js"></script>
@@ -43,7 +43,7 @@
 <?php } ?>
     <div class="wrapper">
         <?= form_open('Users/login_user', 'class="login_form"') ?>
-            <img src="../assets/images/organic_shop_logo_large.svg" alt="Organic Shop">
+            <img src="../assets/images/Stationery_studio.png" alt="stationery_shop">
             <h2>Login to order.</h2>
             <a href="/Users/register">New Member? Register here.</a>
             <ul>

@@ -18,6 +18,29 @@ class User extends CI_Model {
         }
     }
 
+    public function get_user_by_id($user_id) { 
+        $query = "SELECT * FROM Users WHERE user_id = ?";
+        $id = $this->security->xss_clean($user_id);
+        $result_array = $this->db->query($query, array($id))->result_array();
+        if (!empty($result_array)) {
+            return $result_array[0];
+        } else {
+            return null;
+        }
+    }
+
+    public function get_user_data_by_id($user_id) { 
+        $query = "SELECT user_id, first_name, last_name, email, user_level FROM Users WHERE user_id = ?";
+        $id = $this->security->xss_clean($user_id);
+        $result_array = $this->db->query($query, array($id))->result_array();
+        if (!empty($result_array)) {
+            return $result_array[0];
+        } else {
+            return null;
+        }
+    }
+
+
     public function validate_registration($email) {
         $this->form_validation->set_error_delimiters('<div>','</div>');
         $this->form_validation->set_rules('first_name', 'First Name', 'required');
@@ -60,7 +83,7 @@ class User extends CI_Model {
     function login($user, $password) {
         $entered_password_hash = md5($this->security->xss_clean($password));
         if ($user['password'] === $entered_password_hash) {
-            return true;
+            return $user['user_level'];
         } else {
             return "Incorrect email/password.";
         }

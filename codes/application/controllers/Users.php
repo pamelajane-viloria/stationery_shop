@@ -35,15 +35,27 @@ class Users extends CI_Controller {
 		if ($result !== true) {
 			$this->session->set_flashdata('validation_errors', $result);
 			redirect('/Users/login');
-		} else {
-            $user = $this->User->get_user_by_email($email);
-			$result = $this->User->login($user, $password);
-			if ($result !== true) {
-				$this->session->set_flashdata('validation_errors', $result);
-				redirect('/Users/login');
-			} else {
-				redirect('/Products/index');
-			}
+			return;
 		}
+		$user = $this->User->get_user_by_email($email);
+		$user_level = $this->User->login($user, $password);
+	
+		if ($user_level === "Incorrect email/password.") {
+			$this->session->set_flashdata('validation_errors', $user_level);
+			redirect('/Users/login');
+			return;
+		}
+		if ($user_level === 'admin') {
+			$this->session->set_userdata('user_id', $user['user_id']);
+			redirect('/Admin_orders/orders');
+		} else {
+			$this->session->set_userdata('user_id', $user['user_id']);
+			redirect('/Products');
+		}
+	}
+	
+	public function logout() {
+		$this->session->unset_userdata('user_id');
+		redirect('/Users/login');
 	}
 }

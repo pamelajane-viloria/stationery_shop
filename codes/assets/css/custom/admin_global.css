@@ -120,7 +120,7 @@ body .wrapper header {
   text-align: left;
   width: 100%;
   z-index: 2;
-  background-image: url("../../images/vegetable_bg_2.png");
+  background-image: url("../../images/stationery_header_bg.png");
   background-size: cover;
 }
 body .wrapper header h1 {
@@ -627,7 +627,7 @@ body .wrapper > section > div table tbody tr td:last-child form {
 }
 body .wrapper > section > div table tbody tr td:last-child form .bootstrap-select .dropdown-toggle {
   background-color: #2A2D3E;
-  border: 1px solid #EDC679;
+  /* border: 1px solid #EDC679; */
   border-radius: 10px;
   width: 174px;
 }

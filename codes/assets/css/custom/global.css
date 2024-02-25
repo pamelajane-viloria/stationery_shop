@@ -167,8 +167,15 @@ body .wrapper header div .profile_btn span {
   display: inline-block;
   vertical-align: top;
   text-align: center;
-  padding: 13px 0px;
+  padding: 10px 0px;
   margin-right: 5px;
+}
+body .wrapper header div .profile_dropdown {
+  position: absolute;
+  left: 7px;
+  top: 5px;
+  border: none !important;
+  background: none !important;
 }
 body .wrapper ul {
   list-style: none;
@@ -506,4 +513,19 @@ body .popover_overlay {
 }
 .show_popover_overlay {
   overflow: hidden;
+}
+.pagination li {
+  margin: 0 5px;
+}
+.pagination li a {
+  font-size: 15px;
+  color: #B0B0B0;
+  padding: 13px;
+  background-color: #FFFFFF;
+  border-radius: 5px;
+  border: none;
+}
+.pagination li a.active {
+  color: #9C89FF;
+  border: 1px solid #9C89FF;
 }

@@ -9,4 +9,6 @@ $(document).ready(function(){
         $(".popover_overlay").fadeOut();
         $("body").removeClass("show_popover_overlay");
     });
+    const dropdownElementList = document.querySelectorAll('.dropdown-toggle')
+    const dropdownList = [...dropdownElementList].map(dropdownToggleEl => new bootstrap.Dropdown(dropdownToggleEl))
 });

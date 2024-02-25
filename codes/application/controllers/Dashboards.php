@@ -7,15 +7,18 @@ class Dashboards extends CI_Controller {
         $this->load->model('Product');
         $this->load->library('upload');
     }
-	
-	public function orders() {
-		$this->load->view('admin_orders');
-	}
 
 	public function products() {
         $product_data = $this->Product->get_all_products();
         $category_data = $this->Product->get_categories_with_product_count();
         $view_data = $this->prepare_view_data($product_data);
+        $view_data['category_values'] = array(
+            1 => 'Stickers',
+            2 => 'Pens',
+            3 => 'Notebooks',
+            4 => 'Tapes',
+            5 => 'Organizers'
+        );
         $view_data['category_data'] = $category_data;
         $this->load->view('admin_products', $view_data);
     }
@@ -49,32 +52,45 @@ class Dashboards extends CI_Controller {
 
 	public function get_product_data($product_id) {
 		$product_data = $this->Product->get_product_by_id($product_id);
-		echo json_encode($product_data);
+		$image_data = $this->Product->get_productimage_by_id($product_id);
+        $data = array(
+            'product_data' => $product_data,
+            'image_data' => $image_data
+        );
+        echo json_encode($data);
 	}
+
+    // public function get_product_images($product_id) {
+	// 	$product_images = $this->Product->get_productimage_by_id($product_id);
+	// 	echo json_encode($product_images);
+	// }
 	
-	public function edit_product($product_id) {
-		$product_data = $this->input->post();
-		$result = $this->Product->validate_product_data($product_data);
-		if ($result !== null) {
-			$this->session->set_flashdata('validation_errors', $result);
-			redirect('/Dashboards/index_html');
-		} else {
-			$result = $this->Product->update_product($product_id, $product_data);
-			redirect('/Dashboards/products');
-		}
-	}
+    public function edit_product($product_id) {
+        $product_data = $this->input->post();
+        $result = $this->Product->validate_product_data($product_data);
+        if ($result !== null) {
+            $this->session->set_flashdata('validation_errors', $result);
+            redirect('/Dashboards/index_html');
+        } else {
+            $uploaded_images = $this->process_file_uploads(); 
+            $result = $this->Product->update_product($product_id, $product_data, $uploaded_images);
+            redirect('/Dashboards/products');
+        }
+    }
+    
 
     public function add_product() {
         $post_data = $this->input->post();
-        $result = $this->Product->validate_product_data($post_data);
-        if ($result !== null) {
-			$this->session->set_flashdata('validation_errors', $result);
-			redirect('/Dashboards/products');
-		} else {
-            $uploaded_images = $this->process_file_uploads();
-			$result = $this->Product->add_product($post_data, $uploaded_images);
-			redirect('/Dashboards/products');
-		}
+        var_dump($post_data);
+        // $result = $this->Product->validate_product_data($post_data);
+        // if ($result !== null) {
+		// 	$this->session->set_flashdata('validation_errors', $result);
+		// 	redirect('/Dashboards/products');
+		// } else {
+        //     $uploaded_images = $this->process_file_uploads();
+        //     $result = $this->Product->add_product($post_data, $uploaded_images);
+		// 	redirect('/Dashboards/products');
+		// }
     }
     
     private function process_file_uploads() {

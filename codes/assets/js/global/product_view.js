@@ -1,18 +1,16 @@
 $(document).ready(function(){
     $("body").on("click", ".increase_decrease_quantity", function() {
-        let input = $(this).parents('form#add_to_cart_form').children().find('input')
+        let input = $(this).parents('form#add_to_cart_form').children().find('input.form-control');
         let input_val = parseInt(input.val());
         if($(this).attr("data-quantity-ctrl") === "1") {
-            console.log(input_val);
             input.val(input_val + 1);
         } else {
             if(input_val !== "1") {
-                console.log(input_val);
                 input.val(input_val - 1);
             }
         };
         let total_amount = parseInt(input.val()) * parseInt(($(".amount").text()).substring(2));
-        $("#add_to_cart_form").find(".total_amount").text("₱ " + total_amount + ".00");
+        $("#add_to_cart_form").find(".total_amount").val(total_amount + ".00");
     });
 
     $("body").on("click", ".show_image", function() {
@@ -25,7 +23,7 @@ $(document).ready(function(){
     $("body").on("submit", "#add_to_cart_form", function() {
         let form = $(this);
         $.post(form.attr("action"), form.serialize(), function(res) {
-            $(".content_section").html(res);
+            $(".content_section").html(res);    
             $("#success_modal").modal("show");
             setTimeout(function() {
                 $("#success_modal").modal("hide")

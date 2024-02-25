@@ -47,7 +47,7 @@ $(document).ready(function() {
           })(file);
           reader.readAsDataURL(file);
         }
-      });
+    });
       
     
     // Update other checkboxes when one is checked
@@ -60,6 +60,9 @@ $(document).ready(function() {
     /* To delete an image */
     $("body").on("click", ".delete_image", function() {
         $(this).closest('li').remove();
+        if ($("#image_preview").find("li").length === 0) {
+            $("#image_preview").append("<li><button type='button' class='upload_image'></button></li>");
+        }
     });
 
     /* show is_main checkbox on hover */
@@ -87,8 +90,6 @@ $(document).ready(function() {
         $("#add_product_modal").find("h2").text("Add a product");
         $('#product_form')[0].reset();
     });
-
-
 
     // $("body").on("submit", ".categories_form", function() {
     //     filterProducts(form);
@@ -191,8 +192,9 @@ function filterProducts(form) {
 
 function populateEditModal(data) {
     var productData = JSON.parse(data);
-    $("input[name=prouct_name]").val(productData.name);
-    $("textarea[name=description]").val(productData.description);
-    $("input[name=price]").val(productData.price);
-    $("input[name=inventory]").val(productData.inventory);
+    $("input[name=prouct_name]").val(productData.product_data.name);
+    $("textarea[name=description]").val(productData.product_data.description);
+    $("input[name=price]").val(productData.product_data.price);
+    $("input[name=inventory]").val(productData.product_data.inventory);
 }
+

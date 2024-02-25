@@ -8,10 +8,24 @@ class Product extends CI_Model {
     }
 
     public function get_all_products() {
-        $query = "SELECT products.product_id, products.name, products.category_id, products.price, products.inventory, products.sold, images.image_id, images.image_path, images.is_main 
+        $query = "SELECT products.product_id, products.name, products.category_id, products.price, products.rating, products.inventory, products.sold, images.image_id, images.image_path, images.is_main 
             FROM  products LEFT JOIN  images ON products.product_id = images.product_id WHERE images.is_main = '1' AND products.is_archived = '0'";
         return $this->db->query($query)->result_array();
     }
+
+    public function get_paginated_products($offset, $items_per_page) {
+        $query = "SELECT products.product_id, products.name, products.category_id, products.price, products.rating, products.inventory, products.sold, images.image_id, images.image_path, images.is_main 
+            FROM products LEFT JOIN images ON products.product_id = images.product_id WHERE images.is_main = '1' AND products.is_archived = '0' ORDER BY products.product_id LIMIT $offset, $items_per_page";
+        return $this->db->query($query, array($offset, $items_per_page))->result_array();
+    }
+    
+    
+    public function count_all_products() {
+        $query = "SELECT count(*) as total_count FROM `products` where is_archived = 0";
+        $result = $this->db->query($query)->row_array();
+        return $result['total_count'];
+    }
+    
 
     public function search_by_product_name($keyword) {
         $query = "SELECT products.*, images.image_path FROM products LEFT JOIN images ON products.product_id = images.product_id 
@@ -33,10 +47,19 @@ class Product extends CI_Model {
     }
 
     public function get_products_by_category($category) {
-        $query = "SELECT products.*, categories.name AS category_name, images.image_path FROM products INNER JOIN categories ON products.category_id = categories.category_id 
-            INNER JOIN images ON products.product_id = images.product_id WHERE categories.name = ? GROUP BY products.name";
-        $category_name = $this->security->xss_clean($category);
-        return $this->db->query($query, $category_name)->result_array();
+        $whereClause = '';
+        $params = array();
+        if ($category !== 'All') {
+            $whereClause = 'WHERE categories.name = ?';
+            $params[] = $this->security->xss_clean($category);
+        }
+        $query = "SELECT products.*, categories.name AS category_name, images.image_path 
+                  FROM products 
+                  INNER JOIN categories ON products.category_id = categories.category_id 
+                  INNER JOIN images ON products.product_id = images.product_id 
+                  $whereClause 
+                  GROUP BY products.name";
+        return $this->db->query($query, $params)->result_array();
     }
 
     public function get_categories_with_product_count() {
@@ -75,9 +98,10 @@ class Product extends CI_Model {
         return null;
     }
     
-    public function update_product($product_id, $product_data) {
-        $query = "UPDATE `products` SET `name`=?, `description`=?, `price`=?, `inventory`=?, `updated_at`=? WHERE `product_id`=?";
+    public function update_product($product_id, $product_data, $uploaded_images) {
+        $query = "UPDATE `products` SET `category_id`=?, `name`=?, `description`=?, `price`=?, `inventory`=?, `updated_at`=? WHERE `product_id`=?";
         $values = array(
+            $this->security->xss_clean($product_data['category']), 
             $this->security->xss_clean($product_data['prouct_name']), 
             $this->security->xss_clean($product_data['description']), 
             $this->security->xss_clean($product_data['price']),
@@ -89,13 +113,37 @@ class Product extends CI_Model {
         if (!$query_result) {
             $error_message = $this->db->error();
             var_dump($error_message);
-        }    
+        }
+
+        $query = "DELETE FROM `images` WHERE `product_id`= ?";
+        $this->db->query($query, $this->security->xss_clean($product_id));
+
+        $is_main = 0; // Reset to 0 for each image
+        foreach ($uploaded_images as $image) { 
+            $image_path = $image['filename'];
+            $is_main = $image['is_main'];
+            $image_values = array(
+                $this->security->xss_clean($product_id),
+                $this->security->xss_clean($image_path),
+                $this->security->xss_clean($is_main),
+                date('Y-m-d H:i:s'),
+                date('Y-m-d H:i:s')
+            );
+
+            $image_query = "INSERT INTO `images`(`product_id`, `image_path`, `is_main`, `created_at`, `updated_at`) VALUES (?,?,?,?,?)";
+            $image_query_result = $this->db->query($image_query, $image_values);
+            if (!$image_query_result) {
+                $error_message = $this->db->error();
+                var_dump($error_message);
+            }
+        }
     }
 
     public function add_product($post_data, $uploaded_images) {
         $product_query = "INSERT INTO `products`(`category_id`, `name`, `description`, `price`, `inventory`, `created_at`, `updated_at`) 
-            VALUES (2,?,?,?,?,?,?)";
+            VALUES (?,?,?,?,?,?,?)";
         $product_values = array(
+            $this->security->xss_clean($post_data['category']), 
             $this->security->xss_clean($post_data['prouct_name']), 
             $this->security->xss_clean($post_data['description']), 
             $this->security->xss_clean($post_data['price']),
@@ -120,7 +168,7 @@ class Product extends CI_Model {
                     date('Y-m-d H:i:s'),
                     date('Y-m-d H:i:s')
                 );
-    
+                var_dump($image_values);
                 $image_query = "INSERT INTO `images`(`product_id`, `image_path`, `is_main`, `created_at`, `updated_at`) VALUES (?,?,?,?,?)";
                 $image_query_result = $this->db->query($image_query, $image_values);
                 if (!$image_query_result) {

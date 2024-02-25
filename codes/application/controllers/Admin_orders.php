@@ -49,10 +49,3 @@ class Admin_orders extends CI_Controller {
         $this->status_counts = $this->Order->count_items_by_status();
     }
 }
-
-// public function search_by_name() {
-//     $keyword = $this->input->get('search');
-//     $product_data = $this->Product->search_by_product_name($keyword);
-//     $view_data = $this->prepare_view_data($product_data);
-//     $this->load->view('product_results', $view_data);
-// }

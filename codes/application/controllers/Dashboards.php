@@ -59,11 +59,6 @@ class Dashboards extends CI_Controller {
         );
         echo json_encode($data);
 	}
-
-    // public function get_product_images($product_id) {
-	// 	$product_images = $this->Product->get_productimage_by_id($product_id);
-	// 	echo json_encode($product_images);
-	// }
 	
     public function edit_product($product_id) {
         $product_data = $this->input->post();
@@ -81,16 +76,15 @@ class Dashboards extends CI_Controller {
 
     public function add_product() {
         $post_data = $this->input->post();
-        var_dump($post_data);
-        // $result = $this->Product->validate_product_data($post_data);
-        // if ($result !== null) {
-		// 	$this->session->set_flashdata('validation_errors', $result);
-		// 	redirect('/Dashboards/products');
-		// } else {
-        //     $uploaded_images = $this->process_file_uploads();
-        //     $result = $this->Product->add_product($post_data, $uploaded_images);
-		// 	redirect('/Dashboards/products');
-		// }
+        $result = $this->Product->validate_product_data($post_data);
+        if ($result !== null) {
+			$this->session->set_flashdata('validation_errors', $result);
+			redirect('/Dashboards/products');
+		} else {
+            $uploaded_images = $this->process_file_uploads();
+            $result = $this->Product->add_product($post_data, $uploaded_images);
+			redirect('/Dashboards/products');
+		}
     }
     
     private function process_file_uploads() {
